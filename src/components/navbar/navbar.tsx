@@ -6,6 +6,7 @@ import Cookies from 'universal-cookie'
 
 const NavContainer = styled.section`
     font-size: 1.1rem;
+    height: 7%;
     background-color: #e5e5e5;
 `
 

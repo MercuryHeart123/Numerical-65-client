@@ -89,8 +89,7 @@ const Login = (prop: loginProps) => {
             let cpassword = event.target.cpassword.value;
             data = {
                 username: username,
-                password: password,
-                cpassword: cpassword
+                password: password
             }
             if (password == cpassword) {
                 axios.post('http://localhost:8081/auth/register', data

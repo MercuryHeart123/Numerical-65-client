@@ -28,7 +28,7 @@ function App() {
   }, [])
 
   return (
-    <div>
+    <div style={{ width: '100%', height: '100%' }}>
       <Router>
         <Navbar setIsAdmin={setIsAdmin} setUserName={setUserName} username={username} isAdmin={isAdmin} />
         <Routes>
