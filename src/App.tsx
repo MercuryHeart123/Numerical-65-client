@@ -7,10 +7,12 @@ import axios from 'axios'
 import { getHeaders, getTokenFormCookie } from './utill/cookieUtill';
 import History from './pages/history';
 import Admin from './pages/auth/admin';
+import Methods from './pages/methods';
 
 function App() {
   const [username, setUserName] = React.useState<string>('');
   const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
+  const [allMethods, setAllMethods] = React.useState<[]>([])
 
   useEffect(() => {
 
@@ -25,6 +27,15 @@ function App() {
         console.log(err.response.data)
       })
     }
+
+  }, [])
+
+  useEffect(() => {
+    axios.get('http://localhost:8081/api/listMethod').then((res) => {
+      setAllMethods(res.data.data)
+    }).catch((err) => {
+      console.log(err.response.data)
+    })
   }, [])
 
   return (
@@ -34,6 +45,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login setIsAdmin={setIsAdmin} setUserName={setUserName} />} />
+          <Route path='/methods/:methodName' element={<Methods allMethods={allMethods} />} />
           {username &&
             <Route path='/history' element={<History />} />
           }
