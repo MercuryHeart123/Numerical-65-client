@@ -1,11 +1,18 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Bisection from './bisection'
-
-const Methods = (props: { allMethods: [] }) => {
+import Taylor from './taylorSeries'
+import FalsePosition from './falsePosition'
+import { methodsInterface } from '../../App'
+import OnePoint from './onePoint'
+import Newton from './newton'
+import Secant from './secant'
+import Cramer from './cramer'
+const Methods = (props: { allMethods: methodsInterface[] }) => {
     let methodName = useParams<{ methodName: string }>().methodName
     let [isAvailable, setIsAvailable] = React.useState<boolean>(false)
     useEffect(() => {
+
         const checkMethod = async (methodName: string) => {
             let isAvailable: boolean = await new Promise((resolve, reject) => {
                 props.allMethods.forEach((method: any) => {
@@ -17,11 +24,13 @@ const Methods = (props: { allMethods: [] }) => {
             })
             setIsAvailable(isAvailable)
         }
+
         if (methodName && props.allMethods.length > 0) {
+
             checkMethod(methodName)
         }
 
-    }, [...props.allMethods])
+    }, [props.allMethods])
 
 
     const generateMethod = (methodName: string) => {
@@ -29,15 +38,17 @@ const Methods = (props: { allMethods: [] }) => {
             case 'bisection':
                 return <Bisection />
             case 'false-position':
-                return <div>False Position</div>
-            case 'one-point-iteration':
-                return <div>One Point Iteration</div>
+                return <FalsePosition />
+            case 'onePoint':
+                return <OnePoint />
             case 'newton-raphson':
-                return <div>Newton Raphson</div>
+                return <Newton />
             case 'secant':
-                return <div>Secant</div>
+                return <Secant />
             case 'cramer':
-                return <div>Cramer</div>
+                return <Cramer />
+            case 'taylor':
+                return <Taylor />
 
             default:
                 return <div>Not found module</div>

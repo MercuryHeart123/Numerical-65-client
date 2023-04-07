@@ -4,7 +4,6 @@ import axios from 'axios'
 import Chart from '../../components/chart'
 import Input from '../../components/input'
 import PreviewChart from '../../components/chart/preview'
-
 const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -37,32 +36,27 @@ const Th = styled.th`
 `
 
 
-const Bisection = () => {
-    const [latex, setLatex] = useState('x^2-4')
-    const [equation, setEquation] = useState('x^2-4')
-    const [xl, setXl] = useState(0)
-    const [xr, setXr] = useState(1000)
+const OnePoint = () => {
+    const [latex, setLatex] = useState('\\frac {2(1-x^2)}{3} ')
+    const [equation, setEquation] = useState(' 2(1-x^2)/(3) ')
+    const [x0, setX0] = useState(0)
     const [dataTable, setDataTable] = useState<[]>([])
     const [approxTable, setApproxTable] = useState<[]>([])
+
     const [approximate, setApproximate] = useState(0)
-    const [errorMsg, setErrorMsg] = useState<string>('')
 
     const calculate = () => {
         setDataTable([])
-        axios.post('http://localhost:8081/api/bisection', {
+        console.log(equation);
+
+        axios.post('http://localhost:8081/api/OnePoint', {
             latex: equation,
-            xl: xl,
-            xr: xr
+            x0: x0,
         }).then((res) => {
             setApproximate(res.data.data.result)
             setApproxTable(res.data.data.approxValue)
-            setErrorMsg('')
-            setDataTable(res.data.data.ans)
-        }
-        ).catch((err) => {
-            console.log(err.response.data.msg);
 
-            setErrorMsg(err.response.data.msg)
+            setDataTable(res.data.data.ans)
         }
         )
 
@@ -71,57 +65,41 @@ const Bisection = () => {
     return (
         <Container>
             <h1>
-                Bisection
+                OnePoint
             </h1>
             <Input
-                equation={{ latex, setLatex, setEquation, isGx: false }}
+                equation={{ latex, setLatex, setEquation, isGx: true }}
                 calculateFunc={calculate}
                 state={[
                     {
-                        keyName: 'xl',
-                        keyValue: xl,
-                        setKey: setXl
-                    },
-                    {
-                        keyName: 'xr',
-                        keyValue: xr,
-                        setKey: setXr
+                        keyName: 'x0',
+                        keyValue: x0,
+                        setKey: setX0
                     }
                 ]}
             />
-            {errorMsg !== '' &&
-                <h2>
-                    {errorMsg}
-                </h2>
-            }
-
-            {errorMsg === '' && <h2>
+            <h2>
                 {`Approximate : ${approximate}`}
-            </h2>}
+            </h2>
             {dataTable.length > 0 &&
                 <>
                     <PreviewChart data={approxTable} approxValue={approximate} />
 
                     <Chart data={dataTable} />
-
                     <Table>
                         <thead>
                             <Tr>
                                 <Th>Iteration</Th>
-                                <Th>Xl</Th>
-                                <Th>Xr</Th>
-                                <Th>Xm</Th>
+                                <Th>X0</Th>
                                 <Th>Error</Th>
                             </Tr>
                         </thead>
                         <tbody>
-                            {dataTable.map((data: { iteration: number, xl: number, xr: number, xm: number, error: number }, index) => {
+                            {dataTable.map((data: { iteration: number, x0: number, error: number }, index) => {
                                 return (
                                     <Tr key={index}>
                                         <Td>{data.iteration}</Td>
-                                        <Td>{data.xl}</Td>
-                                        <Td>{data.xr}</Td>
-                                        <Td>{data.xm}</Td>
+                                        <Td>{data.x0}</Td>
                                         <Td>{data.error}</Td>
                                     </Tr>
                                 )
@@ -136,4 +114,4 @@ const Bisection = () => {
     )
 }
 
-export default Bisection
+export default OnePoint

@@ -37,19 +37,22 @@ const Th = styled.th`
 `
 
 
-const Bisection = () => {
+const FalsePosition = () => {
     const [latex, setLatex] = useState('x^2-4')
     const [equation, setEquation] = useState('x^2-4')
     const [xl, setXl] = useState(0)
-    const [xr, setXr] = useState(1000)
+    const [xr, setXr] = useState(10)
     const [dataTable, setDataTable] = useState<[]>([])
     const [approxTable, setApproxTable] = useState<[]>([])
-    const [approximate, setApproximate] = useState(0)
     const [errorMsg, setErrorMsg] = useState<string>('')
 
+    const [approximate, setApproximate] = useState<number>(0)
+
     const calculate = () => {
+
+
         setDataTable([])
-        axios.post('http://localhost:8081/api/bisection', {
+        axios.post('http://localhost:8081/api/falsePosition', {
             latex: equation,
             xl: xl,
             xr: xr
@@ -60,18 +63,16 @@ const Bisection = () => {
             setDataTable(res.data.data.ans)
         }
         ).catch((err) => {
-            console.log(err.response.data.msg);
-
+            console.log(err.response.data.msg)
             setErrorMsg(err.response.data.msg)
-        }
-        )
+        })
 
     }
 
     return (
         <Container>
             <h1>
-                Bisection
+                False Position
             </h1>
             <Input
                 equation={{ latex, setLatex, setEquation, isGx: false }}
@@ -101,9 +102,7 @@ const Bisection = () => {
             {dataTable.length > 0 &&
                 <>
                     <PreviewChart data={approxTable} approxValue={approximate} />
-
                     <Chart data={dataTable} />
-
                     <Table>
                         <thead>
                             <Tr>
@@ -136,4 +135,4 @@ const Bisection = () => {
     )
 }
 
-export default Bisection
+export default FalsePosition

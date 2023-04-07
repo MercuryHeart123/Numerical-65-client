@@ -9,10 +9,17 @@ import History from './pages/history';
 import Admin from './pages/auth/admin';
 import Methods from './pages/methods';
 
+export interface methodsInterface {
+  _id: string,
+  methodName: string,
+  available: boolean,
+  processTime: number
+}
+
 function App() {
   const [username, setUserName] = React.useState<string>('');
   const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
-  const [allMethods, setAllMethods] = React.useState<[]>([])
+  const [allMethods, setAllMethods] = React.useState<methodsInterface[]>([])
 
   useEffect(() => {
 
@@ -43,7 +50,7 @@ function App() {
       <Router>
         <Navbar setIsAdmin={setIsAdmin} setUserName={setUserName} username={username} isAdmin={isAdmin} />
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home allMethods={allMethods} />} />
           <Route path='/login' element={<Login setIsAdmin={setIsAdmin} setUserName={setUserName} />} />
           <Route path='/methods/:methodName' element={<Methods allMethods={allMethods} />} />
           {username &&
